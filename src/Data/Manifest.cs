@@ -24,6 +24,18 @@ internal class Manifest
     [JsonPropertyName("fsr_31_vk")]
     public List<DLLRecord> FSR_31_VK { get; set; } = new List<DLLRecord>();
 
+    [JsonPropertyName("fsr_4_dx12")]
+    public List<DLLRecord> FSR_4_DX12 { get; set; } = new List<DLLRecord>();
+
+    [JsonPropertyName("fsr_4_vk")]
+    public List<DLLRecord> FSR_4_VK { get; set; } = new List<DLLRecord>();
+
+    [JsonPropertyName("optiscaler_dx12")]
+    public List<DLLRecord> OPTISCALER_DX12 { get; set; } = new List<DLLRecord>();
+
+    [JsonPropertyName("optiscaler_vk")]
+    public List<DLLRecord> OPTISCALER_VK { get; set; } = new List<DLLRecord>();
+
     [JsonPropertyName("xess")]
     public List<DLLRecord> XeSS { get; set; } = new List<DLLRecord>();
 

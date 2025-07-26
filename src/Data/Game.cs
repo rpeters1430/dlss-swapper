@@ -154,6 +154,38 @@ namespace DLSS_Swapper.Data
 
         [ObservableProperty]
         [Ignore]
+        public partial GameAsset? CurrentFSR_4_DX12 { get; set; } = null;
+
+        [ObservableProperty]
+        [Ignore]
+        public partial bool MultipleFSR4DX12Found { get; set; } = false;
+
+        [ObservableProperty]
+        [Ignore]
+        public partial GameAsset? CurrentFSR_4_VK { get; set; } = null;
+
+        [ObservableProperty]
+        [Ignore]
+        public partial bool MultipleFSR4VKFound { get; set; } = false;
+
+        [ObservableProperty]
+        [Ignore]
+        public partial GameAsset? CurrentOptiScaler_DX12 { get; set; } = null;
+
+        [ObservableProperty]
+        [Ignore]
+        public partial bool MultipleOptiScalerDX12Found { get; set; } = false;
+
+        [ObservableProperty]
+        [Ignore]
+        public partial GameAsset? CurrentOptiScaler_VK { get; set; } = null;
+
+        [ObservableProperty]
+        [Ignore]
+        public partial bool MultipleOptiScalerVKFound { get; set; } = false;
+
+        [ObservableProperty]
+        [Ignore]
         public partial GameAsset? CurrentXeSS { get; set; } = null;
 
         [ObservableProperty]
@@ -175,6 +207,15 @@ namespace DLSS_Swapper.Data
         [ObservableProperty]
         [Ignore]
         public partial bool MultipleXeSSFGFound { get; set; } = false;
+
+        /// <summary>
+        /// Determines if this game is suitable for OptiScaler conversion (has DLSS but no FSR support)
+        /// </summary>
+        [Ignore]
+        public bool IsOptiScalerCompatible => 
+            (CurrentDLSS != null || CurrentDLSS_G != null || CurrentDLSS_D != null) && 
+            CurrentFSR_31_DX12 == null && CurrentFSR_31_VK == null && 
+            CurrentFSR_4_DX12 == null && CurrentFSR_4_VK == null;
 
         [Ignore]
         public abstract bool IsReadyToPlay { get; }
@@ -440,6 +481,29 @@ namespace DLSS_Swapper.Data
                             {
                                 Id = ID,
                                 AssetType = GameAssetType.FSR_31_VK,
+                                Path = dllPath,
+                            };
+                            ProcessGame_ProcessGameAsset(gameAsset);
+                            GameAssets.Add(gameAsset);
+                        }
+                        // TODO: Update with actual FSR 4.x DLL names when available
+                        else if (dllName == "amd_fidelityfx_4_dx12.dll") // Placeholder FSR 4.x DX12 name
+                        {
+                            var gameAsset = new GameAsset()
+                            {
+                                Id = ID,
+                                AssetType = GameAssetType.FSR_4_DX12,
+                                Path = dllPath,
+                            };
+                            ProcessGame_ProcessGameAsset(gameAsset);
+                            GameAssets.Add(gameAsset);
+                        }
+                        else if (dllName == "amd_fidelityfx_4_vk.dll") // Placeholder FSR 4.x Vulkan name
+                        {
+                            var gameAsset = new GameAsset()
+                            {
+                                Id = ID,
+                                AssetType = GameAssetType.FSR_4_VK,
                                 Path = dllPath,
                             };
                             ProcessGame_ProcessGameAsset(gameAsset);
@@ -885,6 +949,26 @@ namespace DLSS_Swapper.Data
                 {
                     CurrentFSR_31_VK = null;
                     CurrentFSR_31_VK = newGameAsset;
+                }
+                else if (gameAssetType == GameAssetType.FSR_4_DX12)
+                {
+                    CurrentFSR_4_DX12 = null;
+                    CurrentFSR_4_DX12 = newGameAsset;
+                }
+                else if (gameAssetType == GameAssetType.FSR_4_VK)
+                {
+                    CurrentFSR_4_VK = null;
+                    CurrentFSR_4_VK = newGameAsset;
+                }
+                else if (gameAssetType == GameAssetType.OPTISCALER_DX12)
+                {
+                    CurrentOptiScaler_DX12 = null;
+                    CurrentOptiScaler_DX12 = newGameAsset;
+                }
+                else if (gameAssetType == GameAssetType.OPTISCALER_VK)
+                {
+                    CurrentOptiScaler_VK = null;
+                    CurrentOptiScaler_VK = newGameAsset;
                 }
                 else if (gameAssetType == GameAssetType.XeSS)
                 {
@@ -1339,6 +1423,10 @@ namespace DLSS_Swapper.Data
             CurrentDLSS_D = null;
             CurrentFSR_31_DX12 = null;
             CurrentFSR_31_VK = null;
+            CurrentFSR_4_DX12 = null;
+            CurrentFSR_4_VK = null;
+            CurrentOptiScaler_DX12 = null;
+            CurrentOptiScaler_VK = null;
             CurrentXeSS = null;
             CurrentXeLL = null;
             CurrentXeSS_FG = null;
@@ -1348,6 +1436,10 @@ namespace DLSS_Swapper.Data
             MultipleDLSSDFound = GameAssets.Count(x => x.AssetType == GameAssetType.DLSS_D) > 1;
             MultipleFSR31DX12Found = GameAssets.Count(x => x.AssetType == GameAssetType.FSR_31_DX12) > 1;
             MultipleFSR31VKFound = GameAssets.Count(x => x.AssetType == GameAssetType.FSR_31_VK) > 1;
+            MultipleFSR4DX12Found = GameAssets.Count(x => x.AssetType == GameAssetType.FSR_4_DX12) > 1;
+            MultipleFSR4VKFound = GameAssets.Count(x => x.AssetType == GameAssetType.FSR_4_VK) > 1;
+            MultipleOptiScalerDX12Found = GameAssets.Count(x => x.AssetType == GameAssetType.OPTISCALER_DX12) > 1;
+            MultipleOptiScalerVKFound = GameAssets.Count(x => x.AssetType == GameAssetType.OPTISCALER_VK) > 1;
             MultipleXeSSFound = GameAssets.Count(x => x.AssetType == GameAssetType.XeSS) > 1;
             MultipleXeLLFound = GameAssets.Count(x => x.AssetType == GameAssetType.XeLL) > 1;
             MultipleXeSSFGFound = GameAssets.Count(x => x.AssetType == GameAssetType.XeSS_FG) > 1;
@@ -1373,6 +1465,22 @@ namespace DLSS_Swapper.Data
                 else if (gameAsset.AssetType == GameAssetType.FSR_31_VK)
                 {
                     CurrentFSR_31_VK = gameAsset;
+                }
+                else if (gameAsset.AssetType == GameAssetType.FSR_4_DX12)
+                {
+                    CurrentFSR_4_DX12 = gameAsset;
+                }
+                else if (gameAsset.AssetType == GameAssetType.FSR_4_VK)
+                {
+                    CurrentFSR_4_VK = gameAsset;
+                }
+                else if (gameAsset.AssetType == GameAssetType.OPTISCALER_DX12)
+                {
+                    CurrentOptiScaler_DX12 = gameAsset;
+                }
+                else if (gameAsset.AssetType == GameAssetType.OPTISCALER_VK)
+                {
+                    CurrentOptiScaler_VK = gameAsset;
                 }
                 else if (gameAsset.AssetType == GameAssetType.XeSS)
                 {

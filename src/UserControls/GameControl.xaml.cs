@@ -165,7 +165,8 @@ namespace DLSS_Swapper.UserControls
 
         private void KeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            Debugger.Break();
+            // Handle keyboard accelerator if needed
+            Logger.Debug("KeyboardAccelerator invoked");
         }
     }
 }

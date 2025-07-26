@@ -40,7 +40,7 @@ public class WindowManager
         window.Closed += Window_Closed;
         window.Activate();
         _windows.Add(window);
-        // TOOD: This will update colours on all windows which is not ideal.
+        // TODO: Optimize to only update colors on specific windows instead of all windows
         UpdateColors(Settings.Instance.AppTheme);
     }
 

@@ -48,6 +48,9 @@ public partial class LibraryPageModel : ObservableObject
             upscalerSelectorBar.Items.Add(new SelectorBarItem() { Text = DLLManager.Instance.GetAssetTypeName(GameAssetType.DLSS_D), Tag = GameAssetType.DLSS_D });
             upscalerSelectorBar.Items.Add(new SelectorBarItem() { Text = DLLManager.Instance.GetAssetTypeName(GameAssetType.FSR_31_DX12), Tag = GameAssetType.FSR_31_DX12 });
             upscalerSelectorBar.Items.Add(new SelectorBarItem() { Text = DLLManager.Instance.GetAssetTypeName(GameAssetType.FSR_31_VK), Tag = GameAssetType.FSR_31_VK });
+            upscalerSelectorBar.Items.Add(new SelectorBarItem() { Text = DLLManager.Instance.GetAssetTypeName(GameAssetType.FSR_4_DX12), Tag = GameAssetType.FSR_4_DX12 });
+            // Note: FSR 4 Vulkan support is not yet available
+            // upscalerSelectorBar.Items.Add(new SelectorBarItem() { Text = DLLManager.Instance.GetAssetTypeName(GameAssetType.FSR_4_VK), Tag = GameAssetType.FSR_4_VK });
             upscalerSelectorBar.Items.Add(new SelectorBarItem() { Text = DLLManager.Instance.GetAssetTypeName(GameAssetType.XeSS), Tag = GameAssetType.XeSS });
             upscalerSelectorBar.Items.Add(new SelectorBarItem() { Text = DLLManager.Instance.GetAssetTypeName(GameAssetType.XeSS_FG), Tag = GameAssetType.XeSS_FG });
             upscalerSelectorBar.Items.Add(new SelectorBarItem() { Text = DLLManager.Instance.GetAssetTypeName(GameAssetType.XeLL), Tag = GameAssetType.XeLL });
@@ -109,6 +112,8 @@ public partial class LibraryPageModel : ObservableObject
         allDllRecords.AddRange(DLLManager.Instance.DLSSDRecords.Where(x => x.LocalRecord?.IsDownloaded == true));
         allDllRecords.AddRange(DLLManager.Instance.FSR31DX12Records.Where(x => x.LocalRecord?.IsDownloaded == true));
         allDllRecords.AddRange(DLLManager.Instance.FSR31VKRecords.Where(x => x.LocalRecord?.IsDownloaded == true));
+        allDllRecords.AddRange(DLLManager.Instance.FSR4DX12Records.Where(x => x.LocalRecord?.IsDownloaded == true));
+        allDllRecords.AddRange(DLLManager.Instance.FSR4VKRecords.Where(x => x.LocalRecord?.IsDownloaded == true));
         allDllRecords.AddRange(DLLManager.Instance.XeSSRecords.Where(x => x.LocalRecord?.IsDownloaded == true));
         allDllRecords.AddRange(DLLManager.Instance.XeSSFGRecords.Where(x => x.LocalRecord?.IsDownloaded == true));
         allDllRecords.AddRange(DLLManager.Instance.XeLLRecords.Where(x => x.LocalRecord?.IsDownloaded == true));
@@ -606,6 +611,34 @@ public partial class LibraryPageModel : ObservableObject
                                 }
                             }
 
+                            var fsr4dx12Record = DLLManager.Instance.FSR4DX12Records.FirstOrDefault(x => string.Equals(x.ZipMD5Hash, newZipHash, StringComparison.InvariantCultureIgnoreCase));
+                            if (fsr4dx12Record is not null)
+                            {
+                                if (HandleLocalDLLRecordZip(importFile, fsr4dx12Record, importResults))
+                                {
+                                    ++totalDllsProcessed;
+                                    App.CurrentApp.RunOnUIThread(() =>
+                                    {
+                                        progressRun.Text = totalDllsProcessed.ToString();
+                                    });
+                                    continue;
+                                }
+                            }
+
+                            var fsr4vkRecord = DLLManager.Instance.FSR4VKRecords.FirstOrDefault(x => string.Equals(x.ZipMD5Hash, newZipHash, StringComparison.InvariantCultureIgnoreCase));
+                            if (fsr4vkRecord is not null)
+                            {
+                                if (HandleLocalDLLRecordZip(importFile, fsr4vkRecord, importResults))
+                                {
+                                    ++totalDllsProcessed;
+                                    App.CurrentApp.RunOnUIThread(() =>
+                                    {
+                                        progressRun.Text = totalDllsProcessed.ToString();
+                                    });
+                                    continue;
+                                }
+                            }
+
                             var xessRecord = DLLManager.Instance.XeSSRecords.FirstOrDefault(x => string.Equals(x.ZipMD5Hash, newZipHash, StringComparison.InvariantCultureIgnoreCase));
                             if (xessRecord is not null)
                             {
@@ -952,6 +985,8 @@ public partial class LibraryPageModel : ObservableObject
             GameAssetType.DLSS_D => DLLManager.Instance.DLSSDRecords,
             GameAssetType.FSR_31_DX12 => DLLManager.Instance.FSR31DX12Records,
             GameAssetType.FSR_31_VK => DLLManager.Instance.FSR31VKRecords,
+            GameAssetType.FSR_4_DX12 => DLLManager.Instance.FSR4DX12Records,
+            GameAssetType.FSR_4_VK => DLLManager.Instance.FSR4VKRecords,
             GameAssetType.XeSS => DLLManager.Instance.XeSSRecords,
             GameAssetType.XeLL => DLLManager.Instance.XeLLRecords,
             GameAssetType.XeSS_FG => DLLManager.Instance.XeSSFGRecords,
@@ -971,6 +1006,8 @@ public partial class LibraryPageModel : ObservableObject
         startedDownloads += DownloadLatestRecord(DLLManager.Instance.DLSSGRecords);
         startedDownloads += DownloadLatestRecord(DLLManager.Instance.FSR31DX12Records);
         startedDownloads += DownloadLatestRecord(DLLManager.Instance.FSR31VKRecords);
+        startedDownloads += DownloadLatestRecord(DLLManager.Instance.FSR4DX12Records);
+        startedDownloads += DownloadLatestRecord(DLLManager.Instance.FSR4VKRecords);
         startedDownloads += DownloadLatestRecord(DLLManager.Instance.XeSSRecords);
         startedDownloads += DownloadLatestRecord(DLLManager.Instance.XeSSFGRecords);
         startedDownloads += DownloadLatestRecord(DLLManager.Instance.XeLLRecords);

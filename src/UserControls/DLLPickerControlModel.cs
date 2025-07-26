@@ -112,6 +112,38 @@ public partial class DLLPickerControlModel : ObservableObject
                 }
                 break;
 
+            case GameAssetType.FSR_4_DX12:
+                DLLRecords = [.. DLLManager.Instance.FSR4DX12Records];
+                if (Settings.Instance.OnlyShowDownloadedDlls == true)
+                {
+                    _ = DLLRecords.RemoveAll(x => x.MD5Hash != Game.CurrentFSR_4_DX12?.Hash && x.LocalRecord?.IsDownloaded is false);
+                }
+                break;
+
+            case GameAssetType.FSR_4_VK:
+                DLLRecords = [.. DLLManager.Instance.FSR4VKRecords];
+                if (Settings.Instance.OnlyShowDownloadedDlls == true)
+                {
+                    _ = DLLRecords.RemoveAll(x => x.MD5Hash != Game.CurrentFSR_4_VK?.Hash && x.LocalRecord?.IsDownloaded is false);
+                }
+                break;
+
+            case GameAssetType.OPTISCALER_DX12:
+                DLLRecords = [.. DLLManager.Instance.OptiScalerDX12Records];
+                if (Settings.Instance.OnlyShowDownloadedDlls == true)
+                {
+                    _ = DLLRecords.RemoveAll(x => x.MD5Hash != Game.CurrentOptiScaler_DX12?.Hash && x.LocalRecord?.IsDownloaded is false);
+                }
+                break;
+
+            case GameAssetType.OPTISCALER_VK:
+                DLLRecords = [.. DLLManager.Instance.OptiScalerVKRecords];
+                if (Settings.Instance.OnlyShowDownloadedDlls == true)
+                {
+                    _ = DLLRecords.RemoveAll(x => x.MD5Hash != Game.CurrentOptiScaler_VK?.Hash && x.LocalRecord?.IsDownloaded is false);
+                }
+                break;
+
             case GameAssetType.XeSS:
                 DLLRecords = [.. DLLManager.Instance.XeSSRecords];
                 if (Settings.Instance.OnlyShowDownloadedDlls == true)

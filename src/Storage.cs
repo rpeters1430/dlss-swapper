@@ -12,9 +12,6 @@ using DLSS_Swapper.Data;
 
 namespace DLSS_Swapper
 {
-    // TODO: Test portable app.
-    // TODO: Clean portable temp path on launch
-
     /*
      * For notes on where data is stored please see https://github.com/beeradmoore/dlss-swapper/wiki/Local-Data-Structure 
      */

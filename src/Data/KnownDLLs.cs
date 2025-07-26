@@ -24,6 +24,12 @@ public class KnownDLLs
     [JsonPropertyName("fsr_31_vk")]
     public List<HashedKnownDLL> FSR_31_VK { get; set; } = new List<HashedKnownDLL>();
 
+    [JsonPropertyName("fsr_4_dx12")]
+    public List<HashedKnownDLL> FSR_4_DX12 { get; set; } = new List<HashedKnownDLL>();
+
+    [JsonPropertyName("fsr_4_vk")]
+    public List<HashedKnownDLL> FSR_4_VK { get; set; } = new List<HashedKnownDLL>();
+
     [JsonPropertyName("xess")]
     public List<HashedKnownDLL> XeSS { get; set; } = new List<HashedKnownDLL>();
 

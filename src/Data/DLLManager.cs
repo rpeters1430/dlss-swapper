@@ -24,6 +24,10 @@ internal class DLLManager
     public ObservableCollection<DLLRecord> DLSSDRecords { get; } = new ObservableCollection<DLLRecord>();
     public ObservableCollection<DLLRecord> FSR31DX12Records { get; } = new ObservableCollection<DLLRecord>();
     public ObservableCollection<DLLRecord> FSR31VKRecords { get; } = new ObservableCollection<DLLRecord>();
+    public ObservableCollection<DLLRecord> FSR4DX12Records { get; } = new ObservableCollection<DLLRecord>();
+    public ObservableCollection<DLLRecord> FSR4VKRecords { get; } = new ObservableCollection<DLLRecord>();
+    public ObservableCollection<DLLRecord> OptiScalerDX12Records { get; } = new ObservableCollection<DLLRecord>();
+    public ObservableCollection<DLLRecord> OptiScalerVKRecords { get; } = new ObservableCollection<DLLRecord>();
     public ObservableCollection<DLLRecord> XeSSRecords { get; } = new ObservableCollection<DLLRecord>();
     public ObservableCollection<DLLRecord> XeLLRecords { get; } = new ObservableCollection<DLLRecord>();
     public ObservableCollection<DLLRecord> XeSSFGRecords { get; } = new ObservableCollection<DLLRecord>();
@@ -266,6 +270,10 @@ internal class DLLManager
         CancelDownloads(DLSSDRecords);
         CancelDownloads(FSR31DX12Records);
         CancelDownloads(FSR31VKRecords);
+        CancelDownloads(FSR4DX12Records);
+        CancelDownloads(FSR4VKRecords);
+        CancelDownloads(OptiScalerDX12Records);
+        CancelDownloads(OptiScalerVKRecords);
         CancelDownloads(XeSSRecords);
         CancelDownloads(XeSSFGRecords);
         CancelDownloads(XeLLRecords);
@@ -362,6 +370,10 @@ internal class DLLManager
             MergeManifestsIntoMasterList(GameAssetType.DLSS_D, DLSSDRecords, Manifest.DLSS_D, ImportedManifest?.DLSS_D);
             MergeManifestsIntoMasterList(GameAssetType.FSR_31_DX12, FSR31DX12Records, Manifest.FSR_31_DX12, ImportedManifest?.FSR_31_DX12);
             MergeManifestsIntoMasterList(GameAssetType.FSR_31_VK, FSR31VKRecords, Manifest.FSR_31_VK, ImportedManifest?.FSR_31_VK);
+            MergeManifestsIntoMasterList(GameAssetType.FSR_4_DX12, FSR4DX12Records, Manifest.FSR_4_DX12, ImportedManifest?.FSR_4_DX12);
+            MergeManifestsIntoMasterList(GameAssetType.FSR_4_VK, FSR4VKRecords, Manifest.FSR_4_VK, ImportedManifest?.FSR_4_VK);
+            MergeManifestsIntoMasterList(GameAssetType.OPTISCALER_DX12, OptiScalerDX12Records, Manifest.OPTISCALER_DX12, ImportedManifest?.OPTISCALER_DX12);
+            MergeManifestsIntoMasterList(GameAssetType.OPTISCALER_VK, OptiScalerVKRecords, Manifest.OPTISCALER_VK, ImportedManifest?.OPTISCALER_VK);
             MergeManifestsIntoMasterList(GameAssetType.XeSS, XeSSRecords, Manifest.XeSS, ImportedManifest?.XeSS);
             MergeManifestsIntoMasterList(GameAssetType.XeSS_FG, XeSSFGRecords, Manifest.XeSS_FG, ImportedManifest?.XeSS_FG);
             MergeManifestsIntoMasterList(GameAssetType.XeLL, XeLLRecords, Manifest.XeLL, ImportedManifest?.XeLL);
@@ -802,6 +814,8 @@ internal class DLLManager
             GameAssetType.DLSS_D => "DLSS Ray Reconstruction",
             GameAssetType.FSR_31_DX12 => "FSR 3.1 DirectX 12",
             GameAssetType.FSR_31_VK => "FSR 3.1 Vulkan",
+            GameAssetType.FSR_4_DX12 => "FSR 4 DirectX 12",
+            GameAssetType.FSR_4_VK => "FSR 4 Vulkan",
             GameAssetType.XeSS => "XeSS",
             GameAssetType.XeLL => "XeLL",
             GameAssetType.XeSS_FG => "XeSS Frame Generation",
@@ -819,6 +833,8 @@ internal class DLLManager
             GameAssetType.DLSS_D => GameAssetType.DLSS_D_BACKUP,
             GameAssetType.FSR_31_DX12 => GameAssetType.FSR_31_DX12_BACKUP,
             GameAssetType.FSR_31_VK => GameAssetType.FSR_31_VK_BACKUP,
+            GameAssetType.FSR_4_DX12 => GameAssetType.FSR_4_DX12_BACKUP,
+            GameAssetType.FSR_4_VK => GameAssetType.FSR_4_VK_BACKUP,
             GameAssetType.XeSS => GameAssetType.XeSS_BACKUP,
             GameAssetType.XeLL => GameAssetType.XeLL_BACKUP,
             GameAssetType.XeSS_FG => GameAssetType.XeSS_FG_BACKUP,
@@ -1142,6 +1158,18 @@ internal class DLLManager
             recordList = FSR31VKRecords;
             importedRecordList = ImportedManifest.FSR_31_VK;
         }
+        else if (fileName == "amd_fidelityfx_dx12.dll") // TODO: Update with actual FSR 4.x DX12 DLL name
+        {
+            gameAssetType = GameAssetType.FSR_4_DX12;
+            recordList = FSR4DX12Records;
+            importedRecordList = ImportedManifest.FSR_4_DX12;
+        }
+        else if (fileName == "amd_fidelityfx_vk.dll") // TODO: Update with actual FSR 4.x Vulkan DLL name
+        {
+            gameAssetType = GameAssetType.FSR_4_VK;
+            recordList = FSR4VKRecords;
+            importedRecordList = ImportedManifest.FSR_4_VK;
+        }
         else if (fileName == "libxess.dll")
         {
             gameAssetType = GameAssetType.XeSS;
@@ -1293,6 +1321,26 @@ internal class DLLManager
             recordList = FSR31VKRecords;
             importedRecordList = ImportedManifest?.FSR_31_VK;
         }
+        else if (dllRecord.AssetType == GameAssetType.FSR_4_DX12)
+        {
+            recordList = FSR4DX12Records;
+            importedRecordList = ImportedManifest?.FSR_4_DX12;
+        }
+        else if (dllRecord.AssetType == GameAssetType.FSR_4_VK)
+        {
+            recordList = FSR4VKRecords;
+            importedRecordList = ImportedManifest?.FSR_4_VK;
+        }
+        else if (dllRecord.AssetType == GameAssetType.OPTISCALER_DX12)
+        {
+            recordList = OptiScalerDX12Records;
+            importedRecordList = ImportedManifest?.OPTISCALER_DX12;
+        }
+        else if (dllRecord.AssetType == GameAssetType.OPTISCALER_VK)
+        {
+            recordList = OptiScalerVKRecords;
+            importedRecordList = ImportedManifest?.OPTISCALER_VK;
+        }
         else if (dllRecord.AssetType == GameAssetType.XeSS)
         {
             recordList = XeSSRecords;
@@ -1329,6 +1377,8 @@ internal class DLLManager
             GameAssetType.DLSS_D => "nvngx_dlssd.dll",
             GameAssetType.FSR_31_DX12 => "amd_fidelityfx_dx12.dll",
             GameAssetType.FSR_31_VK => "amd_fidelityfx_vk.dll",
+            GameAssetType.FSR_4_DX12 => "amd_fidelityfx_dx12.dll", // FSR 4.x uses same DLL name as FSR 3.x
+            GameAssetType.FSR_4_VK => "amd_fidelityfx_vk.dll",   // FSR 4 Vulkan not yet supported by AMD
             GameAssetType.XeSS => "libxess.dll",
             GameAssetType.XeSS_FG => "libxess_fg.dll",
             GameAssetType.XeLL => "libxell.dll",
