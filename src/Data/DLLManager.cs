@@ -209,7 +209,7 @@ internal class DLLManager
                 var manifest = await JsonSerializer.DeserializeAsync(memoryStream, SourceGenerationContext.Default.Manifest);
                 if (manifest is null)
                 {
-                    throw new Exception(ResourceHelper.GetString("DllManager_CouldNotDeserializeManifestException"));
+                    throw new Exception("Could not deserialize manifest.json.");
                 }
 
                 Manifest = manifest;
